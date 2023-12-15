@@ -32,4 +32,4 @@ jobs:
           tag_name: "v${{ github.event.inputs.version }}"
           name: "Version ${{ github.event.inputs.version }}"
           files: |
-            Linux/**
+            hello.txt
