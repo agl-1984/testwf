@@ -13,8 +13,8 @@ jobs:
         with:
           script: |
             await github.rest.actions.createWorkflowDispatch({
-              'org-anic',
-              'testwf',
-              'workflows/build.yml',
-              'main',
+              owner: 'org-anic',
+              repo: 'testwf',
+              workflow_id: 'build.yml',
+              ref: 'main',
             });
