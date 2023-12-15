@@ -1,0 +1,35 @@
+name: Create release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: true
+        type: string
+        default: '1'
+  
+jobs:
+  build:
+    name: Create release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download artifacts
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: build.yml
+          workflow_conclusion: success
+          branch: master
+          repo: org-anic/testwf
+          path: .
+            
+      - name: Upload built Files
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "v${{ github.event.inputs.version }}"
+          name: "Version ${{ github.event.inputs.version }}"
+          files: |
+            Linux/**
