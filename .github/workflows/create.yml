@@ -22,7 +22,7 @@ jobs:
           workflow_conclusion: success
           branch: main
           repo: org-anic/testwf
-          path: .
+          path: path
             
       - name: Upload built Files
         uses: softprops/action-gh-release@v1
@@ -32,4 +32,4 @@ jobs:
           tag_name: "v${{ github.event.inputs.version }}"
           name: "Version ${{ github.event.inputs.version }}"
           files: |
-            hello.txt
+            path/**
