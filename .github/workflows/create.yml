@@ -31,5 +31,6 @@ jobs:
         with:
           tag_name: "v${{ github.event.inputs.version }}"
           name: "Version ${{ github.event.inputs.version }}"
+          prerelease: false
           files: |
             path/**
