@@ -5,7 +5,7 @@ on:
   
 jobs:
   sync:
-    name: Sync
+    name: Sync 2
     runs-on: ubuntu-latest
     steps:
       - name: Sync repo
