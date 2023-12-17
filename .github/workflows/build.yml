@@ -16,7 +16,7 @@ jobs:
           BRANCH_NAME: main
 
   build:
-    name: Build ex
+    name: Build ex2
     runs-on: ubuntu-latest
     needs: sync
     
