@@ -11,7 +11,7 @@ jobs:
       - name: Sync repo
         uses: actions/github-script@v5
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.SYNC_TOKEN }}
           script: |
             await github.rest.repos.mergeUpstream({
               owner: 'org-anic',
