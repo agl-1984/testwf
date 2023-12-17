@@ -19,7 +19,7 @@ jobs:
               branch: 'main',
             });
   build:
-    name: Build ex2
+    name: Build ex3
     runs-on: ubuntu-latest
     needs: sync
     
