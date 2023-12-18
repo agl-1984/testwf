@@ -13,7 +13,7 @@ permissions:
   
 jobs:
   build:
-    name: Create release
+    name: Create release 1
     runs-on: ubuntu-latest
     
     steps:
