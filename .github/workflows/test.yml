@@ -15,4 +15,7 @@ jobs:
         run: |
           bash ./script.sh "${{ env.SECRET }}"
 
+          python3 ./script.py
+
+
 
