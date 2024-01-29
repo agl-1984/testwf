@@ -10,6 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Test
+        env:
+          SECRET: ${{ secrets.SECRET }}
         run: |
           bash ./script.sh "${{ env.SECRET }}"
 
