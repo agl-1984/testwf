@@ -4,15 +4,15 @@ on:
   workflow_call:
   workflow_dispatch:
 
-env:
-  RUNNER_DEF: windows-2022
-  RUNNER_X64: ubuntu-latest
-
 jobs:
 
   build:
     name: Do
-
+  
+    env:
+      RUNNER_DEF: windows-2022
+      RUNNER_X64: ubuntu-latest
+  
     strategy:
       matrix:
         arch: [Win32, x64]
