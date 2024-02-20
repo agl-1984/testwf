@@ -1,17 +1,16 @@
 name: test-run-on
 
 on:
-  workflow_call:
-  workflow_dispatch:
+  workflow_dispatch
+
+env:
+  RUNNER_DEF: windows-2022
+  RUNNER_X64: ubuntu-latest
 
 jobs:
 
   build:
-    name: Do
-  
-    env:
-      RUNNER_DEF: windows-2022
-      RUNNER_X64: ubuntu-latest
+    name: Do the job
   
     strategy:
       matrix:
@@ -22,4 +21,4 @@ jobs:
     steps:
       - name: Print
         run: |
-          echo ${{ runner.os }}
+          echo ${{ runner.OS }}
