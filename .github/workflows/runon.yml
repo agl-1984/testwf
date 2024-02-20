@@ -3,10 +3,6 @@ name: test-run-on
 on:
   workflow_dispatch
 
-env:
-  RUNNER_DEF: windows-2022
-  RUNNER_X64: ubuntu-latest
-
 jobs:
 
   build:
@@ -16,7 +12,7 @@ jobs:
       matrix:
         arch: [Win32, x64]
 
-    runs-on: ${{ matrix.arch == 'x64' && env.RUNNER_X64 || env.RUNNER_DEF }}
+    runs-on: ${{ matrix.arch == 'x64' && 'ubuntu-latest' || 'windows-2022' }}
 
     steps:
       - name: Print
