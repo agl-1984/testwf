@@ -1,0 +1,25 @@
+name: test-run-on
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  RUNNER_DEF: windows-2022
+  RUNNER_X64: ubuntu-latest
+
+jobs:
+
+  build:
+    name: Do
+
+    strategy:
+      matrix:
+        arch: [Win32, x64]
+
+    runs-on: ${{ matrix.arch == 'x64' && env.RUNNER_X64 || env.RUNNER_DEF }}
+
+    steps:
+      - name: Print
+        run: |
+          echo ${{ runner.os }}
