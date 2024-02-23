@@ -1,0 +1,35 @@
+name: Test W
+on:
+  workflow_dispatch:
+    inputs:
+      cmd1:
+      cmd2:
+      cmd3:
+      cmd4:
+  
+jobs:
+  build:
+    name: Run
+    runs-on: windows-2022
+    
+    steps:
+      - name: Stat
+        run: |
+          systeminfo |find "Available Physical Memory"
+          dir | find "bytes free"
+          systeminfo
+
+      - name: Run
+        run: |
+          ${{ inputs.cmd1 }}
+          ${{ inputs.cmd2 }}
+          ${{ inputs.cmd3 }}
+          ${{ inputs.cmd4 }}
+
+      - name: Stat
+        run: |
+          systeminfo |find "Available Physical Memory"
+          dir | find "bytes free"
+          systeminfo
+
+
