@@ -1,0 +1,88 @@
+name: Windows ATL Header Smoke Test.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/test-atl-headers.yml'
+      - 'atl-test/**'
+
+jobs:
+
+  windows:
+    name: ATL headers (x64_x86)
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: cmd
+
+    steps:
+      - name: Clone.
+        uses: actions/checkout@v6
+
+      # Reused as-is from win_release.yml: tries to add the ATL/MFC components
+      # to the pre-installed VS instance on the runner.
+      - name: Install ATL and MFC build tools
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $setup = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\setup.exe"
+          if (!(Test-Path $setup)) {
+            throw "Visual Studio installer was not found at: $setup"
+          }
+
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          if (!(Test-Path $vswhere)) {
+            throw "vswhere.exe was not found at: $vswhere"
+          }
+
+          $installPath = & $vswhere -latest -products * -property installationPath
+          if (-not $installPath) {
+            throw "Could not detect a Visual Studio installation path."
+          }
+
+          Write-Host "Installing ATL/MFC into: $installPath"
+          $args = @(
+            'modify',
+            '--installPath', $installPath,
+            '--add', 'Microsoft.VisualStudio.Workload.VCTools',
+            '--add', 'Microsoft.VisualStudio.Component.VC.ATLMFC',
+            '--add', 'Microsoft.VisualStudio.Component.VC.ATL',
+            '--add', 'Microsoft.VisualStudio.Component.VC.v143.x86.x64',
+            '--quiet', '--norestart', '--wait'
+          )
+
+          $process = Start-Process -FilePath $setup -ArgumentList $args -Wait -PassThru
+          if (($process.ExitCode -ne 0) -and ($process.ExitCode -ne 3010)) {
+            throw "Visual Studio modify failed with exit code $($process.ExitCode)."
+          }
+
+          Write-Host "ATL and MFC components are installed"
+
+      # Pinned to the exact same commit/inputs used by win_release.yml.
+      - uses: Eden-CI/msvc-dev-cmd@1bd71f95d6f3d1b2b3395b335cc63bcdc90cf223
+        name: Native Tools Command Prompt.
+        with:
+          arch: x64_x86
+          sdk: 10.0.26100.0
+          toolset: 14.44
+
+      - name: Show environment.
+        run: |
+          echo INCLUDE=%INCLUDE%
+          where cl.exe
+          where ninja.exe
+
+      - name: Configure.
+        run: |
+          cmake -B build -G Ninja -S atl-test
+
+      - name: Build.
+        run: |
+          cmake --build build --verbose
+
+      - name: Run.
+        run: |
+          build\atl_test.exe
