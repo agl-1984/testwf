@@ -21,11 +21,9 @@ jobs:
       - name: Clone.
         uses: actions/checkout@v6
 
-      # Reused as-is from win_release.yml: tries to add the ATL/MFC components
-      # to the pre-installed VS instance on the runner.
+      # Reused as-is from win_release.yml (with workload and v143 components removed since they mismatch VS 2025 Enterprise)
       - name: Install ATL and MFC build tools
         shell: pwsh
-        continue-on-error: true
         run: |
           $ErrorActionPreference = 'Stop'
           $setup = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\setup.exe"
@@ -47,10 +45,8 @@ jobs:
           $args = @(
             'modify',
             '--installPath', $installPath,
-            '--add', 'Microsoft.VisualStudio.Workload.VCTools',
             '--add', 'Microsoft.VisualStudio.Component.VC.ATLMFC',
             '--add', 'Microsoft.VisualStudio.Component.VC.ATL',
-            '--add', 'Microsoft.VisualStudio.Component.VC.v143.x86.x64',
             '--quiet', '--norestart', '--wait'
           )
 
