@@ -46,7 +46,10 @@ jobs:
             'modify',
             '--installPath', $installPath,
             '--add', 'Microsoft.VisualStudio.Component.VC.ATL',
-            '--quiet', '--norestart', '--wait'
+            '--add', 'Microsoft.VisualStudio.Component.VC.14.44.17.14.ATL',
+            '--add', 'Microsoft.VisualStudio.Component.VC.14.44.17.14.x86.x64',
+            '--add', 'Microsoft.VisualStudio.Component.VC.14.44.17.14.CLI.Support',
+            '--norestart', '--wait'
           )
 
           $process = Start-Process -FilePath $setup -ArgumentList $args -Wait -PassThru
