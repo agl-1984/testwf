@@ -21,43 +21,14 @@ jobs:
       - name: Clone.
         uses: actions/checkout@v6
 
-      # Reused as-is from win_release.yml (with workload and v143 components removed since they mismatch VS 2025 Enterprise)
-      - name: Install ATL and MFC build tools
+      - name: Install Visual Studio Build Tools
         shell: pwsh
         run: |
-          $ErrorActionPreference = 'Stop'
-          $setup = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\setup.exe"
-          if (!(Test-Path $setup)) {
-            throw "Visual Studio installer was not found at: $setup"
-          }
-
-          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          if (!(Test-Path $vswhere)) {
-            throw "vswhere.exe was not found at: $vswhere"
-          }
-
-          $installPath = & $vswhere -latest -products * -property installationPath
-          if (-not $installPath) {
-            throw "Could not detect a Visual Studio installation path."
-          }
-
-          Write-Host "Installing ATL/MFC into: $installPath"
-          $args = @(
-            'modify',
-            '--installPath', $installPath,
-            '--add', 'Microsoft.VisualStudio.Component.VC.ATL',
-            '--add', 'Microsoft.VisualStudio.Component.VC.14.44.17.14.ATL',
-            '--add', 'Microsoft.VisualStudio.Component.VC.14.44.17.14.x86.x64',
-            '--add', 'Microsoft.VisualStudio.Component.VC.14.44.17.14.CLI.Support',
-            '--norestart', '--wait'
-          )
-
-          $process = Start-Process -FilePath $setup -ArgumentList $args -Wait -PassThru
-          if (($process.ExitCode -ne 0) -and ($process.ExitCode -ne 3010)) {
-            throw "Visual Studio modify failed with exit code $($process.ExitCode)."
-          }
-
-          Write-Host "ATL and MFC components are installed"
+          Write-Host "Installing VS 2026 Build Tools..."
+          choco install visualstudio2026buildtools `
+            --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.ATL --add Microsoft.VisualStudio.Component.VC.14.44.17.14.ATL --add Microsoft.VisualStudio.Component.VC.14.44.17.14.x86.x64 --add Microsoft.VisualStudio.Component.VC.14.44.17.14.CLI.Support --includeRecommended --quiet" `
+            -y --ignore-package-exit-codes=3010
+          Write-Host "VS 2026 Build Tools installation completed"
 
       # Pinned to the exact same commit/inputs used by win_release.yml.
       - uses: Eden-CI/msvc-dev-cmd@1bd71f95d6f3d1b2b3395b335cc63bcdc90cf223
